@@ -1,1 +1,1 @@
-steps = MakeDist, UploadCPAN
+steps = DistTest, Tag, MakeDist, UploadCPAN
