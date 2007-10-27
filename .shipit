@@ -1,1 +1,3 @@
-steps = DistTest, Tag, MakeDist, UploadCPAN
+steps = FindVersion, ChangeVersion, CheckChangeLog, DistTest, Tag, MakeDist, UploadCPAN
+CheckChangeLog.file = Changelog
+
