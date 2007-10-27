@@ -1,4 +1,5 @@
 use ExtUtils::MakeMaker;
+use 5.006000;
 
 WriteMakefile(
     'NAME'		=> 'Net::LDAP::Server',
