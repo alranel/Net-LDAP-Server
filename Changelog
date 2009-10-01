@@ -1,3 +1,7 @@
+    - don't hangup when receiving abandonRequest in order to support
+      clients like Evolution which expect that the socket is still
+      alive after such a request (patch by Bill Lindley)
+
 version 0.4 (2007/10/27):
 
 	- added support for method "abandon"

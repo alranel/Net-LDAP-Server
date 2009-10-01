@@ -18,7 +18,7 @@ use Net::LDAP::ASN qw(LDAPRequest LDAPResponse);
 use Net::LDAP::Constant qw(LDAP_OPERATIONS_ERROR LDAP_UNWILLING_TO_PERFORM);
 use Net::LDAP::Entry;
 
-our $VERSION = '0.4';
+our $VERSION = '0.41';
 use fields qw(socket);
 
 our %respTypes=(
@@ -77,12 +77,11 @@ sub handle {
 			last;
 		}
 	}
-	my $respType = $respTypes{$reqType}
-		or return 1;  # if no response type is present hangup the connection
-
-	my $reqData = $request->{$reqType};
-		
+	return 1 if !exists $respTypes{$reqType};  # unknown request type: let's hangup
+	my $respType = $respTypes{$reqType};
+    
 	# here we can do something with the request of type $reqType
+	my $reqData = $request->{$reqType};
 	my $method = $functions{$reqType};
 	my $result;
 	if ($self->can($method)){
@@ -137,7 +136,7 @@ sub handle {
 	}
 	
 	# and now send the result to the client
-	print $socket &_encode_result($mid, $respType, $result);
+	print $socket &_encode_result($mid, $respType, $result) if $respType;
 	
 	return 0;
 }	
