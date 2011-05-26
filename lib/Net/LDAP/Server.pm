@@ -18,7 +18,7 @@ use Net::LDAP::ASN qw(LDAPRequest LDAPResponse);
 use Net::LDAP::Constant qw(LDAP_OPERATIONS_ERROR LDAP_UNWILLING_TO_PERFORM);
 use Net::LDAP::Entry;
 
-our $VERSION = '0.41';
+our $VERSION = '0.42';
 use fields qw(socket);
 
 our %respTypes=(
