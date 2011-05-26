@@ -19,7 +19,7 @@ use Net::LDAP::Constant qw(LDAP_OPERATIONS_ERROR LDAP_UNWILLING_TO_PERFORM);
 use Net::LDAP::Entry;
 use Data::Dumper;
 
-our $VERSION = '0.42';
+our $VERSION = '0.43';
 use fields qw(in out);
 
 our %respTypes=(
