@@ -18,9 +18,8 @@ use constant RESULT_OK => {
 
 # constructor
 sub new {
-	my ($class, $sock) = @_;
-	my $self = $class->SUPER::new($sock);
-	printf "Accepted connection from: %s\n", $sock->peerhost();
+	my $class = shift;
+	my $self = $class->SUPER::new(@_);
 	return $self;
 }
 
@@ -28,7 +27,7 @@ sub new {
 sub bind {
 	my $self = shift;
 	my $reqData = shift;
-	print Dumper($reqData);
+	print STDERR Dumper($reqData);
 	return RESULT_OK;
 }
 
@@ -36,8 +35,8 @@ sub bind {
 sub search {
 	my $self = shift;
 	my $reqData = shift;
-	print "Searching...\n";
-	print Dumper($reqData);
+	print STDERR "Searching...\n";
+	print STDERR Dumper($reqData);
 	my $base = $reqData->{'baseObject'};
 	
 	# plain die if dn contains 'dying'

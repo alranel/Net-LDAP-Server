@@ -17,9 +17,10 @@ use Convert::ASN1 qw(asn_read);
 use Net::LDAP::ASN qw(LDAPRequest LDAPResponse);
 use Net::LDAP::Constant qw(LDAP_OPERATIONS_ERROR LDAP_UNWILLING_TO_PERFORM);
 use Net::LDAP::Entry;
+use Data::Dumper;
 
 our $VERSION = '0.42';
-use fields qw(socket);
+use fields qw(in out);
 
 our %respTypes=(
 	'bindRequest' => 'bindResponse', 
@@ -48,18 +49,27 @@ our %functions=(
 our @reqTypes = keys %respTypes;
 
 sub new {
-    my ($proto, $sock) = @_;
+    my ($proto, $input, $output) = @_;
 	my $class = ref($proto) || $proto;
 	my $self = fields::new($class);
-	$self->{socket} = $sock;
+
+    #print STDERR Dumper($input);
+    #print STDERR Dumper($output);
+
+	$self->{in} = $input;
+	$self->{out} = $output || $input;
 	return $self;
 }
 
 sub handle {
 	my Net::LDAP::Server $self = shift;
-	my $socket = $self->{socket};
+	my $in = $self->{in};
+	my $out = $self->{out};
 	
-	asn_read($socket, my $pdu);
+    #print STDERR Dumper($in);
+    #print STDERR Dumper($out);
+
+	asn_read($in, my $pdu);
 	#print '-' x 80,"\n";
 	#print "Received:\n";
 	#Convert::ASN1::asn_dump(\*STDOUT,$pdu);
@@ -68,7 +78,7 @@ sub handle {
 		or return 1;
 
 	#print "messageID: $mid\n";
-	#use Data::Dumper; print Dumper($request);
+	#print Dumper($request);
 	
 	my $reqType;
 	foreach my $type (@reqTypes) {
@@ -117,7 +127,7 @@ sub handle {
 				}
 				my $pdu = $LDAPResponse->encode($response);
 				if ($pdu) {
-					print $socket $pdu;
+					print $out $pdu;
 				} else {
 					$result = undef;
 					last;
@@ -136,7 +146,7 @@ sub handle {
 	}
 	
 	# and now send the result to the client
-	print $socket &_encode_result($mid, $respType, $result) if $respType;
+	print $out &_encode_result($mid, $respType, $result) if $respType;
 	
 	return 0;
 }	
@@ -199,6 +209,11 @@ Net::LDAP::Server - LDAP server side protocol handling
   
   package main;
   my $handler = MyServer->new($socket);
+  $handler->handle;
+
+  # or with distinct input and output handles
+  package main;
+  my $handler = MyServer->new( $input_handle, $output_handle );
   $handler->handle;
 
 =head1 ABSTRACT
@@ -310,8 +325,13 @@ the request:
   my $handler = MyServer->new($socket);
   $handler->handle;
 
-See examples in I<examples/> directory for sample servers, using L<IO::Select> 
-or L<Net::Daemon>.
+Or, alternatively, you can pass two handles for input and output, respectively.
+
+  my $handler = MyServer->new(*STDIN{IO},*STDOUT{IO});
+  $handler->handle;
+
+See examples in I<examples/> directory for sample servers, using L<IO::Select>,
+L<Net::Daemon> or L<Net::Server>.
 
 =head1 DEPENDENCIES
 
@@ -324,7 +344,7 @@ or L<Net::Daemon>.
 
 =item L<Net::LDAP>
 
-=item Examples in I<examples> directory.
+=item Examples in C<examples> directory.
 
 =back
 
