@@ -11,5 +11,15 @@ WriteMakefile(
     	Net::LDAP => 0,
     	Convert::ASN1 => 0
     },
-    'dist'         	=> { COMPRESS => 'gzip', SUFFIX => 'gz' }
+    'dist'         	=> { COMPRESS => 'gzip', SUFFIX => 'gz' },
+    'DISTNAME' => 'Net-LDAP-Server',
+    'LICENSE' => 'perl',
+    'test' => {
+        'TESTS' => 't/*.t'
+    },
+    'META_MERGE' => {
+        resources => {
+            repository => 'git://git@github.com:alexrj/Net-LDAP-Server.git',
+        },
+    },
 );
