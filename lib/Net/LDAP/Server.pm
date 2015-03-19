@@ -12,7 +12,7 @@
 package Net::LDAP::Server;
 use strict;
 use warnings;
-
+use 5.006000;
 use Convert::ASN1 qw(asn_read);
 use Net::LDAP::ASN qw(LDAPRequest LDAPResponse);
 use Net::LDAP::Constant qw(LDAP_OPERATIONS_ERROR LDAP_UNWILLING_TO_PERFORM);
