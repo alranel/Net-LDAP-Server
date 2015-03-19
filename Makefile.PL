@@ -1,5 +1,6 @@
 use ExtUtils::MakeMaker;
 use 5.006000;
+my $mm_ver = $ExtUtils::MakeMaker::VERSION;
 
 WriteMakefile(
     'NAME'		=> 'Net::LDAP::Server',
@@ -11,6 +12,10 @@ WriteMakefile(
     	Net::LDAP => 0,
     	Convert::ASN1 => 0
     },
+    ($mm_ver >= 6.48
+        ? (MIN_PERL_VERSION => 5.006)
+        : ()
+    ),
     'dist'         	=> { COMPRESS => 'gzip', SUFFIX => 'gz' },
     'DISTNAME' => 'Net-LDAP-Server',
     'LICENSE' => 'perl',
